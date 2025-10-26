@@ -1,0 +1,48 @@
+services:
+  ex4_postgres:
+    image: postgres:16
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    volumes:
+      - postgresvolumeex4:/var/lib/postgresql/data
+    secrets:
+      - db_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - psql_network
+
+  client_debian_psql:
+    build:
+      context: .
+      dockerfile: ./debian_psql/Dockerfile
+    depends_on:
+      ex4_postgres:
+        condition: service_healthy
+    environment:
+      - PGUSER=john
+      - PGPASSWORD=johndoe
+      - PGDATABASE=doe
+      - PGHOST=ex4_postgres
+    command: ["psql"]
+    networks:
+      - psql_network
+
+networks:
+  psql_network:
+    driver: bridge
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+
+volumes:
+  postgresvolumeex4:

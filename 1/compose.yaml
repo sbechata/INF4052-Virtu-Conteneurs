@@ -1,0 +1,16 @@
+services:
+  exercice1:
+    build:
+      context: .
+      dockerfile: ./image/Dockerfile
+
+# Voir pour faire un volume?
+#services:
+#  exercice1:
+#    build:
+#      context: .                 # ou ./image/ si tu ne copies plus le fichier
+#      dockerfile: image/Dockerfile
+#    volumes:
+#      - ./msg.txt:/opt/msg.txt:ro
+#    command: ["/bin/cat", "/opt/msg.txt"]   # au cas où le CMD du Dockerfile diffère
+#

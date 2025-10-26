@@ -1,0 +1,20 @@
+services:
+  ex3_postgres:
+    image: postgres:latest
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    volumes:
+      - postgresvolume:/var/lib/postgresql/
+    secrets:
+      - db_password
+
+volumes:
+  postgresvolume:
+
+secrets:
+  db_password:
+    file: ./db_password.txt

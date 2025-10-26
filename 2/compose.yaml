@@ -1,0 +1,7 @@
+services:
+  ex2_node_server:
+    build:
+      context: ./image
+      dockerfile: ./Dockerfile
+    ports:
+      - "127.0.0.1:3030:3030"
